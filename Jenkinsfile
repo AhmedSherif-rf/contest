@@ -1,35 +1,30 @@
-
-
-
 pipeline {
     agent any
     stages {
-        stage('Build') {
+        stage('BuildImage') {
             steps {
                 script{
                     echo 'building the application'
                     sh 'docker --version'
-                }  
+                    //sh 'docker rmi myapp'
+                    sh 'docker build -t myapp .'
+                }
             }
         }
-        stage('build image') {
+        stage('deployment') {
             steps {
                 script{
-                    echo 'building the docker image'
-                    // withCredentials([usernamePassword(credentialsId: 'dockerhub-repo', passwordVariable: 'PASS', usernameVariable: 'USER')]){
-                    //     sh 'docker build -t ahmedsherifmo/maven-app:mvn-2.0 .'
-                    //     sh "echo ${PASS} | docker login -u ${USER} --password-stdin"
-                    //     sh 'docker push ahmedsherifmo/maven-app:mvn-2.0'}
-                    
+                    echo 'deploying the app'
+                    sh 'docker run -ti -d myapp'
                 }
             }
         }
         stage('Deliver') {
             steps {
                 script{
-                   echo 'Deliver stage'
+                   echo 'Deliver stage deploy on some server'
                 }
             }
         }
-    }
-}
+     }
+     }
